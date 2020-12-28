@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory
+        android:title="General Preferences 2">
+
+        <Preference
+            android:key="preference"
+            android:title="Hello 2"
+            android:summary="Hello World 2"/>
+
+        <EditTextPreference
+            android:key="name"
+            android:title="@string/name_setting"
+            android:summary="@string/name_summary"/>
+            android:dialogTitle="@string/name_dialog"/>
+
+        <EditTextPreference
+            android:key="status"
+            android:title="@string/status_setting"
+            android:summary="@string/status_summary"/>
+            android:dialogTitle="@string/status_dialog"/>
+
+    </PreferenceCategory>
+</PreferenceScreen>
