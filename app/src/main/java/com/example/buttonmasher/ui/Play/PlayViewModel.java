@@ -4,16 +4,13 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.example.buttonmasher.Game;
+
 public class PlayViewModel extends ViewModel {
 
-    private MutableLiveData<String> mText;
+    private MutableLiveData<Game> game;
 
     public PlayViewModel() {
-        mText = new MutableLiveData<>();
-        mText.setValue("This is home fragment");
-    }
 
-    public LiveData<String> getText() {
-        return mText;
     }
 }
