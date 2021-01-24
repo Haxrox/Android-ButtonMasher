@@ -20,6 +20,12 @@ public class ShopViewModel extends ViewModel {
 
     public ShopViewModel() {
 
+        mText = new MutableLiveData<>();
+        mText.setValue("This is dashboard fragment");
+
+        SharedPreferences sharedPreferences = MainActivity.getInstance().getSharedPreferences("someKey", Context.MODE_PRIVATE);
+        mClicks = new MutableLiveData<>();
+        mClicks.setValue(sharedPreferences.getString("Clicks", "0"));
     }
 
     public LiveData<Perk> getPerks() {

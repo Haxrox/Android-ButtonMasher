@@ -20,6 +20,7 @@ import com.example.buttonmasher.MainActivity;
 import com.example.buttonmasher.R;
 import com.example.buttonmasher.ui.Settings.SettingsFragment;
 
+// Create all buttons + text labels, etc, etc to purchase perks
 public class ShopFragment extends Fragment {
 
     private ShopViewModel shopViewModel;
@@ -27,12 +28,11 @@ public class ShopFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         Log.i("ShopFragment", "OnCreateView");
-        shopViewModel =
-                new ViewModelProvider(this).get(ShopViewModel.class);
+        shopViewModel = new ViewModelProvider(this).get(ShopViewModel.class);
         View root = inflater.inflate(R.layout.fragment_shop, container, false);
 
-        TextView clickBox = root.findViewById(R.id.totalClicks);
-        clickBox.setText(MainActivity.getProfile().getClicks());
+        final TextView clickBox = root.findViewById(R.id.totalClicks);
+        clickBox.setText(String.valueOf(MainActivity.getProfile().getClicks()));
 
         return root;
     }
