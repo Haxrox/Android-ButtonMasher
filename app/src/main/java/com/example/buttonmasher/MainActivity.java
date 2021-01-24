@@ -48,8 +48,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onSupportNavigateUp() {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-        return NavigationUI.navigateUp(navController, appBarConfiguration)
-                || super.onSupportNavigateUp();
+        return navController.popBackStack();
+                // NavigationUI.navigateUp(navController, appBarConfiguration) || super.onSupportNavigateUp();
     }
 
 
@@ -60,15 +60,15 @@ public class MainActivity extends AppCompatActivity {
     public static Profile getProfile() { return profile; }
 
     public void displayToast(String message, int length) {
-        Toast.makeText(getApplicationContext(), message, length).show();
-    }
-
-    public void displayToast(String message) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), message, length).show();
             }
         });
+    }
+
+    public void displayToast(String message) {
+        displayToast(message, Toast.LENGTH_SHORT);
     }
 }
