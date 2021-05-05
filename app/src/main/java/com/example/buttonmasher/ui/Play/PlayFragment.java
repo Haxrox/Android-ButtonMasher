@@ -1,5 +1,6 @@
 package com.example.buttonmasher.ui.Play;
 
+import android.graphics.ImageDecoder;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.view.LayoutInflater;
@@ -14,52 +15,54 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.buttonmasher.MainActivity;
+import com.example.buttonmasher.Profile;
 import com.example.buttonmasher.R;
 
 public class PlayFragment extends Fragment {
-
-    private PlayViewModel playViewModel;
     // Constants
     private static final int GAME_LENGTH = 15;
     private static final int MIN_CPU_SPEED = 75;
     private static final int MAX_CPU_SPEED = 200;
 
+    // ViewModel
+    private PlayViewModel mPlayViewModel;
+
     // Scores
-    int cpuClicks, userClicks;
+    int mCpuClicks, mUserClicks;
 
     // UI Objects
-    private TextView timeLeft, userBox, cpuBox;
-    private Button startButton, clickButton;
+    private TextView mTimeLeft, mUserBox, mCpuBox;
+    private Button mStartButton, mClickButton;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        playViewModel = new ViewModelProvider(this).get(PlayViewModel.class);
+        mPlayViewModel = new ViewModelProvider(this).get(PlayViewModel.class);
         // Initializing variables to be same as the data in the PlayViewModel
-        cpuClicks = playViewModel.getCpuClicks();
-        userClicks = playViewModel.getUserClicks();
+        mCpuClicks = mPlayViewModel.getCpuClicks();
+        mUserClicks = mPlayViewModel.getUserClicks();
 
         // UI Objects
         View root = inflater.inflate(R.layout.fragment_play, container, false);
-        timeLeft = root.findViewById(R.id.timeLeft);
-        userBox = root.findViewById(R.id.userScoreBox);
-        cpuBox = root.findViewById(R.id.cpuScoreBox);
-        startButton = root.findViewById(R.id.buttonStart);
-        clickButton = root.findViewById(R.id.clickButton);
+        mTimeLeft = root.findViewById(R.id.timeLeft);
+        mUserBox = root.findViewById(R.id.userScoreBox);
+        mCpuBox = root.findViewById(R.id.cpuScoreBox);
+        mStartButton = root.findViewById(R.id.buttonStart);
+        mClickButton = root.findViewById(R.id.clickButton);
 
         // Button listeners
         // Start the game
-        startButton.setOnClickListener(new View.OnClickListener() {
+        mStartButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 newGame();
             }
         });
         // Increment user score by 1
-        clickButton.setOnClickListener(new View.OnClickListener() {
+        mClickButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                userClicks++;
-                userBox.setText(String.valueOf(userClicks));
+                mUserClicks++;
+                mUserBox.setText(String.valueOf(mUserClicks));
             }
         });
 
@@ -73,69 +76,76 @@ public class PlayFragment extends Fragment {
 
     public void newGame() {
         // Initializing UI
-        timeLeft.setText(String.valueOf(GAME_LENGTH));
-        userBox.setText(String.valueOf(playViewModel.getUserClicks()));
-        cpuBox.setText(String.valueOf(playViewModel.getCpuClicks()));
+        mTimeLeft.setText(String.valueOf(GAME_LENGTH));
+        mUserBox.setText(String.valueOf(mPlayViewModel.getUserClicks()));
+        mCpuBox.setText(String.valueOf(mPlayViewModel.getCpuClicks()));
 
         // Variables
-        userClicks = 0;
-        cpuClicks = 0;
-        playViewModel.setUserClicks(userClicks);
-        playViewModel.setCpuClicks(cpuClicks);
+        mUserClicks = 0;
+        mCpuClicks = 0;
+        mPlayViewModel.setUserClicks(mUserClicks);
+        mPlayViewModel.setCpuClicks(mCpuClicks);
 
         // CPU
         long computerInterval = (long) ((Math.random()*(MAX_CPU_SPEED - MIN_CPU_SPEED) + MIN_CPU_SPEED));
         CountDownTimer cpuTimer = new CountDownTimer((long)GAME_LENGTH * 1000, computerInterval) {
             @Override
             public void onTick(long millisUntilFinished) {
-                cpuClicks++;
-                cpuBox.setText(String.valueOf(cpuClicks));
+                mCpuClicks++;
+                mCpuBox.setText(String.valueOf(mCpuClicks));
             }
             @Override
             public void onFinish() {
-                CountDownTimer cpuTimer = playViewModel.getCpuTimer();
+                CountDownTimer cpuTimer = mPlayViewModel.getCpuTimer();
                 cpuTimer.cancel();
             }
         };
-        playViewModel.setCpuTimer(cpuTimer);
+        mPlayViewModel.setCpuTimer(cpuTimer);
 
         // GameTimer
         CountDownTimer gameTimer = new CountDownTimer((long)GAME_LENGTH * 1000, (long)1000) {
             @Override
             public void onTick(long millisUntilFinished) {
-                timeLeft.setText(String.format("%ds", millisUntilFinished / 1000));
+                mTimeLeft.setText(String.format("%ds", millisUntilFinished / 1000));
             }
             @Override
             public void onFinish() {
-                CountDownTimer cpuTimer = playViewModel.getCpuTimer();
+                CountDownTimer cpuTimer = mPlayViewModel.getCpuTimer();
                 cpuTimer.cancel();
                 endGame();
             }
         };
-        playViewModel.setGameTimer(gameTimer);
+        mPlayViewModel.setGameTimer(gameTimer);
 
         // Beginning
         gameTimer.start();
         cpuTimer.start();
-        clickButton.setEnabled(true);
-        startButton.setEnabled(false);
+        mClickButton.setEnabled(true);
+        mStartButton.setEnabled(false);
         MainActivity.getInstance().displayToast("The computer is clicking at " + computerInterval + "ms, good luck!");
     }
 
     public void endGame() {
         // Setting to begin state
-        clickButton.setEnabled(false);
-        startButton.setEnabled(true);
+        mClickButton.setEnabled(false);
+        mStartButton.setEnabled(true);
+        MainActivity mainActivity = MainActivity.getInstance();
+        Profile profile = MainActivity.getProfile();
+
         // Getting winner
-        int clickDifference = userClicks - cpuClicks;
-        if (userClicks > cpuClicks) { // User won
-            // profile.incrementWins();
-            MainActivity.getInstance().displayToast("You out-clicked the computer by " + Math.abs(clickDifference) + " clicks!");
-        } else if (cpuClicks > userClicks) { // CPU won
-            MainActivity.getInstance().displayToast("The computer has out-clicked you by " + Math.abs(clickDifference) + " clicks!");
+        int clickDifference = mUserClicks - mCpuClicks;
+        if (mUserClicks > mCpuClicks) { // User won
+            profile.incrementWins();
+            mainActivity.displayToast("You out-clicked the computer by " + Math.abs(clickDifference) + " clicks!");
+        } else if (mCpuClicks > mUserClicks) { // CPU won
+            profile.incrementLosses();
+            mainActivity.displayToast("The computer has out-clicked you by " + Math.abs(clickDifference) + " clicks!");
         } else { // No-one won
-            MainActivity.getInstance().displayToast("You and the computer has tied!");
+            profile.incrementTies();
+            mainActivity.displayToast("You and the computer has tied!");
         }
-        // profile.incrementClicks(userClicks + clickDifference);
+
+        // Update profile
+        profile.incrementClicks(mUserClicks + clickDifference);
     }
 }
