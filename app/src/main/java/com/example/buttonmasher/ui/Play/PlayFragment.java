@@ -144,7 +144,6 @@ public class PlayFragment extends Fragment {
             profile.incrementTies();
             mainActivity.displayToast("You and the computer has tied!");
         }
-
         // Update profile
         profile.incrementClicks(mUserClicks + clickDifference);
     }

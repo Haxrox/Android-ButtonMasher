@@ -16,6 +16,7 @@ public class ShopViewModel extends ViewModel {
 
     SharedPreferences sharedPreferences;
 
+    private MutableLiveData<Integer> clicks;
     private MutableLiveData<Perk> perks;
 
     public ShopViewModel() {
