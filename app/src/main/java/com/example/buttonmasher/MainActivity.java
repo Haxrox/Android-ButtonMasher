@@ -22,6 +22,8 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 import androidx.preference.PreferenceManager;
 
+import org.jetbrains.annotations.NotNull;
+
 public class MainActivity extends AppCompatActivity {
 
     // Firestore
@@ -38,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
         mInstance = this;
         // Getting data from Firestore
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        mID = sharedPreferences.getString("ID", "");
+        mID = sharedPreferences.getString("ID", " ");
         firestore.collection("Profiles").document(mID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -82,6 +84,7 @@ public class MainActivity extends AppCompatActivity {
                     Log.e("MainActivity", "Failed to get task - " + task.getResult());
                 }
             }
+
         });
 
         setTitle(getString(R.string.app_name));
